@@ -139,28 +139,34 @@ function Tree(initialArr) {
     }
 
     const find = (value) => {
-        let tmp = root;
+        let current = root;
 
-        // while (tmp !== null) {
+        // while (current !== null) {
             
-        //     // console.log(tmp.getRight());
-        //     // console.log(tmp.getLeft());
+        //     // console.log(current.getRight());
+        //     // console.log(current.getLeft());
             
-        //     if (value === tmp.getData()) {
-        //         return tmp;
+        //     if (value === current.getData()) {
+        //         return current;
         //     }
             
-        //     tmp = tmp.getRight();
+        //     current = current.getRight();
         // }
 
-        while (tmp !== null) {
+        while (current !== null) {
             
-            if (value === tmp.getData()) {
-                return tmp;
+            if (value === current.getData()) {
+                return current;
+            } 
+            else if (value < current.getData()) {
+                current = current.getLeft();
+            }
+            else if (value > current.getData()) {
+                current = current.getRight();
             }
             
-            tmp = tmp.getLeft();
         }
+        return null;
     }
 
     return {
@@ -179,14 +185,20 @@ const tree = Tree(arr);
 
 const root = tree.getRoot();
 
-tree.prettyPrint(root);
 
 // console.log(tree.find(324).getRight().getData());
-// console.log(tree.find(324));
-console.log(tree.find(67));
 
-// tree.insertValue(root, 69);
-// tree.insertValue(root, 6000);
-// tree.insertValue(root, 7000);
+tree.insertValue(root, 69);
+tree.insertValue(root, 6000);
+tree.insertValue(root, 7000);
+
+console.log(tree.find(324).getData());
+console.log(tree.find(6000).getData());
+console.log(tree.find(6345).getData());
+console.log(tree.find(7000).getData());
+console.log(tree.find(67).getData());
+console.log(tree.find(69));
+
+tree.prettyPrint(root);
 
 // tree.deleteKey(root, 324)
