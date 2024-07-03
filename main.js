@@ -84,8 +84,6 @@ function Tree(initialArr) {
         }
     };
 
-    // prettyPrint(root);
-
     const insertValue = (root, value) => {
         if (!root) {
             return Node(value);
@@ -141,18 +139,6 @@ function Tree(initialArr) {
     const find = (value) => {
         let current = root;
 
-        // while (current !== null) {
-
-        //     // console.log(current.getRight());
-        //     // console.log(current.getLeft());
-
-        //     if (value === current.getData()) {
-        //         return current;
-        //     }
-
-        //     current = current.getRight();
-        // }
-
         while (current !== null) {
 
             if (value === current.getData()) {
@@ -176,27 +162,14 @@ function Tree(initialArr) {
 
         queue.push(current);
 
-        // console.log(queue);
-        // console.log(queue.shift(current));
-
-        // valuesArr.push(current.getLeft().getData());
-        // console.log(queue);
-        // console.log(valuesArr);
-        // queue.push(null)
-        // console.log(queue);
-
         while (queue.length !== 0) {
-
-            // // queue.push(current.getLeft());
-
             const node = queue.shift();
 
-            callback(node);
-
-            valuesArr.push(node.getData());
-
-            // //     // console.log(node.getData());
-            // //     // queue.push(node);
+            if (callback) {
+                callback(node);
+            } else {
+                valuesArr.push(node.getData());
+            }
 
             if (node.getLeft()) {
                 queue.push(node.getLeft());
@@ -207,59 +180,179 @@ function Tree(initialArr) {
                 queue.push(node.getRight());
 
             }
-            // if (node.getLeft() === null) {
-            //     // queue.shift();
-            //     break;
-            // } else {
+        }
 
-            // }
+        if (!callback) {
+            
+            return valuesArr;
+        }
 
+    }
 
-            // if (queue.length === 0) {
-            //     break;
-            // } else {
+    const inOrder = (callback) => {
+        const current = root;
+        const arr = [];
+        
+        const traverseInOrder = (current) => {
+            if (!current) {
+                return current;
+            }
 
-            // }
+            traverseInOrder(current.getLeft());
 
+            if (callback) {
+                
+                callback(current);
+            } else {
 
+                arr.push(current.getData());
+            }
 
-            //     // else
+            traverseInOrder(current.getRight());
+        }
+
+        traverseInOrder(current)
+
+        if (!callback) {
+            return arr;
+        }
+    }
+    
+    const preOrder = (callback) => {
+        const current = root;
+        const arr = [];
+        
+        const traversePreOrder = (current) => {
+            if (!current) {
+                return current;
+            }
+
+            traversePreOrder(current.getLeft());
+
+            if (callback) {
+                
+                callback(current);
+            } else {
+
+                arr.push(current.getData());
+            }
+
+            traversePreOrder(current.getRight());
+        }
+
+        traversePreOrder(current)
+
+        if (!callback) {
+            return arr;
+        }
+    }
+    
+    const postOrder = (callback) => {
+        const current = root;
+        const arr = [];
+        
+        const traversePostOrder = (current) => {
+            if (!current) {
+                return current;
+            }
+
+            traversePostOrder(current.getLeft());
+
+            if (callback) {
+                
+                callback(current);
+            } else {
+
+                arr.push(current.getData());
+            }
+
+            traversePostOrder(current.getRight());
+        }
+
+        traversePostOrder(current)
+
+        if (!callback) {
+            return arr;
+        }
+    }
+
+    const height = (node) => {
+        if (!node) {
+            return 0;
+        }
+
+        const current = node;
+        const queue = []
+        let count = 0;
+
+        queue.push(current);
+
+        while (queue.length !== 0) {
+            let levelSize = queue.length;
+
+            while (levelSize !== 0) {
+                const node = queue.shift();
+    
+                if (node.getLeft()) {
+                    queue.push(node.getLeft())
+                } 
+                
+                if (node.getRight()) {
+                    queue.push(node.getRight())
+                }
+                levelSize--;
+            }
+
+            count++;
+        }
+
+        return count - 1;
+    }
+
+    const depth = (node) => {
+        let current = root;
+        const nodeData = node.getData()
+        let count = 0;
+
+        while (current !== null) {
+            if (nodeData === current.getData()) {
+                return count;
+            } else if (nodeData < current.getData()) {
+                count++
+                current = current.getLeft();
+            } else if (nodeData > current.getData()) {
+                count++
+                current = current.getRight();
+            }
 
         }
 
-        return valuesArr;
-
+        return count;
     }
-    //     // if (current.getLeft() !== null) {
-    //     //     current = current.getLeft();
 
-    //     // }
-    //     // else if (current.getRight() !== null) {
+    const isBalanced = () => {
+        const node = root;
 
-    //     //     // queue.push(current.getRight().getData());
-    //     //     current = current.getRight();
-    //     // } else {
-    //     //     current = root;
-    //     // }
+        if (!node) return -1;
+    
+        const leftHeight = height(node.getLeft());
+        const rightHeight = height(node.getRight());
 
-    //     // if (current.getRight() === null && current.getLeft() === null) {
+        const result = Math.abs(leftHeight - rightHeight);
 
-    //     //     current = null;
-    //     // }
+        console.log(result);
+        if (result <= 1) {
+            return true;
+        } else if (result > 1) {
+            return false;
+        }
+    
+    }
 
-
-    // const 
-
-    // enqueue
-    // queue.push(root.getData());
-    // queue.push(root.getLeft().getData());
-    // queue.push(root.getRight().getData());
-
-    // dequeue
-    // queue.shift()
-
-    // return queue;
-
+    const reBalance = () => {
+        const arrTree = inOrder();
+        return buildTree(arrTree);
+    }
 
     return {
         getRoot,
@@ -269,40 +362,17 @@ function Tree(initialArr) {
         insertValue,
         deleteKey,
         find,
-        levelOrder
+        levelOrder,
+        inOrder,
+        preOrder,
+        postOrder,
+        height,
+        depth,
+        isBalanced,
+        reBalance
     }
 }
 
 const arr = [67, 6345, 324];
 const tree = Tree(arr);
-
 const root = tree.getRoot();
-
-
-// console.log(tree.find(324).getRight().getData());
-
-tree.insertValue(root, 50);
-tree.insertValue(root, 35);
-tree.insertValue(root, 61);
-tree.insertValue(root, 69);
-tree.insertValue(root, 6000);
-tree.insertValue(root, 6011);
-tree.insertValue(root, 6001);
-tree.insertValue(root, 7000);
-
-// console.log(tree.find(324).getData());
-// console.log(tree.find(6000).getData());
-// console.log(tree.find(6345).getData());
-// console.log(tree.find(7000).getData());
-// console.log(tree.find(67).getData());
-// console.log(tree.find(69));
-
-// tree.deleteKey(root, 324)
-
-tree.prettyPrint(root);
-
-function printNode(node) {
-    console.log(node.getData());
-}
-
-console.log(tree.levelOrder(printNode));
